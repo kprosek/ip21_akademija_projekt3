@@ -67,19 +67,18 @@ class ShowPriceController
         if (in_array($token, $userFavouriteTokens)) {
             User::find($this->id)->favourites()->where('token_name', $token)->delete();
             $updatedUserFavouriteTokens = User::find($this->id)->favourites()->orderBy('token_name', 'asc')->get()->pluck('token_name')->toArray();
-            $isFavourite = false;
         } else {
             User::find($this->id)->favourites()->updateOrInsert(
                 ['token_name' => $token],
                 ['user_id' => $this->id, 'token_name' => $token]
             );
             $updatedUserFavouriteTokens = User::find($this->id)->favourites()->orderBy('token_name', 'asc')->get()->pluck('token_name')->toArray();
-            $isFavourite = true;
         }
+        $updatedUserDropdownList = $this->dropdownList();
 
         return response()->json([
-            'userFavouriteTokens' => $updatedUserFavouriteTokens,
-            'isFavourite' => $isFavourite
+            'userDropdownList' => $updatedUserDropdownList,
+            'userFavouriteTokens' => $updatedUserFavouriteTokens
         ]);
     }
 }

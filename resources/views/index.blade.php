@@ -31,28 +31,6 @@
     </header>
 
     <main>
-        @auth
-            <section class="section-border">
-                <section class="section-title">
-                    <i class="fa-regular fa-star"></i>
-                    <h2>Favourites</h2>
-                </section>
-
-                <section class="list-favourites">
-                    <ul>
-                        @foreach ($userFavouriteTokens as $token)
-                            <li>{{ $token }}</li>
-                        @endforeach
-                    </ul>
-                </section>
-            </section>
-        @endauth
-
-        <section class="section-border">
-            <section class="section-title">
-                <i class="fa-solid fa-list"></i>
-                <h2>Tokens</h2>
-            </section>
             <section id="vue-crypto-price-form">
                 <crypto-price-form
                     :dropdown-list='@json($dropdownList)'

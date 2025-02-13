@@ -1,43 +1,63 @@
 <template>
-  <form @submit.prevent="fetchPrice" class="form-select-tokens">
-
-    <label id="dropdown_token_from">From</label>
-    <section class="section-select-token">
-
-      <button v-if="isAuthenticated" @click.prevent="markFavourite('btn_from')" :disabled="tokenFrom === ''"
-        class="btn btn-favourite" name="btn_favourite">
-        <i :class="['fa-star', 'icon-favourite', 'fa-lg', isFromFavourite ? 'fa-solid' : 'fa-regular']"></i>
-      </button>
-
-      <select v-model="tokenFrom" @change="resetPrice" name="dropdown_token_from" required>
-        <option disabled selected value="">Select:</option>
-        <option v-for="item in dropdownList" :key="item" :value="item">
-          {{ item }}
-          <span v-if="userFavouriteTokens.includes(item)"> *</span>
-        </option>
-      </select>
+  <section v-if="isAuthenticated" class="section-border">
+    <section class="section-title">
+      <i class="fa-regular fa-star"></i>
+      <h2>Favourites</h2>
     </section>
 
-    <label id="dropdown_token_to">To</label>
-    <section class="section-select-token">
+    <section class="list-favourites">
+      <ul>
+        <li v-for="token in userFavouriteTokens" :key="token">{{ token }}</li>
+      </ul>
+    </section>
+  </section>
 
-      <button v-if="isAuthenticated" @click.prevent="markFavourite('btn_to')" :disabled="tokenTo === ''"
-        class="btn btn-favourite" name="btn_favourite">
-        <i :class="['fa-star', 'icon-favourite', 'fa-lg', isToFavourite ? 'fa-solid' : 'fa-regular']"></i>
-      </button>
-
-      <select v-model="tokenTo" @change="resetPrice" name="dropdown_token_to" required>
-        <option disabled selected value="">Select:</option>
-        <option v-for="item in dropdownList" :key="item" :value="item">
-          {{ item }}
-          <span v-if="userFavouriteTokens.includes(item)"> *</span>
-        </option>
-      </select>
+  <section class="section-border">
+    <section class="section-title">
+      <i class="fa-solid fa-list"></i>
+      <h2>Tokens</h2>
     </section>
 
-    <button class="btn btn-price"><i class="fa-solid fa-magnifying-glass"></i>Show
-      Price</button>
-  </form>
+    <form @submit.prevent="fetchPrice" class="form-select-tokens">
+
+      <label id="dropdown_token_from">From</label>
+      <section class="section-select-token">
+
+        <button v-if="isAuthenticated" @click.prevent="markFavourite('btn_from')" :disabled="tokenFrom === ''"
+          class="btn btn-favourite" name="btn_favourite">
+          <i :class="['fa-star', 'icon-favourite', 'fa-lg', isFromFavourite ? 'fa-solid' : 'fa-regular']"></i>
+        </button>
+
+        <select v-model="tokenFrom" @change="resetPrice" name="dropdown_token_from" required>
+          <option disabled selected value="">Select:</option>
+          <option v-for="item in userDropdownList" :key="item" :value="item">
+            {{ item }}
+            <span v-if="userFavouriteTokens.includes(item)"> *</span>
+          </option>
+        </select>
+      </section>
+
+      <label id="dropdown_token_to">To</label>
+      <section class="section-select-token">
+
+        <button v-if="isAuthenticated" @click.prevent="markFavourite('btn_to')" :disabled="tokenTo === ''"
+          class="btn btn-favourite" name="btn_favourite">
+          <i :class="['fa-star', 'icon-favourite', 'fa-lg', isToFavourite ? 'fa-solid' : 'fa-regular']"></i>
+        </button>
+
+        <select v-model="tokenTo" @change="resetPrice" name="dropdown_token_to" required>
+          <option disabled selected value="">Select:</option>
+          <option v-for="item in userDropdownList" :key="item" :value="item">
+            {{ item }}
+            <span v-if="userFavouriteTokens.includes(item)"> *</span>
+          </option>
+        </select>
+      </section>
+
+      <button class="btn btn-price"><i class="fa-solid fa-magnifying-glass"></i>Show
+        Price</button>
+    </form>
+  </section>
 
   <section v-if="price" class="section-border-price">
     <p class="text-token-price">Current Token value: 1 {{ tokenFrom }} = {{ price }}
@@ -97,8 +117,8 @@ export default {
       }, {
         withCredentials: true
       }).then(response => {
+        this.userDropdownList = response.data.userDropdownList;
         this.userFavouriteTokens = response.data.userFavouriteTokens;
-        console.log(this.userFavouriteTokens);
       })
     },
     resetPrice() {
